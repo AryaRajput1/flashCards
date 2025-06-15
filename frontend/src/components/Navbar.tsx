@@ -1,9 +1,15 @@
-import { Box, Button, Dialog, Flex, List, Text } from "@chakra-ui/react";
+import { Box, Button, ColorPickerSwatchGroup, Dialog, Flex, List, Text } from "@chakra-ui/react";
 import { useColorMode } from "./ui/color-mode";
 import { LuCross, LuMoon, LuPencil, LuSun, LuX } from "react-icons/lu";
+import AddCardForm from "./AddCardForm";
+import { useState } from "react";
 
 const Navbar = () => {
   const { colorMode, toggleColorMode } = useColorMode();
+  const [open, setOpen] = useState(false)
+  const onSubmitForm = () => {
+    setOpen(false)
+  }
   return (
     <Box>
       <Flex
@@ -35,8 +41,8 @@ const Navbar = () => {
               </Button>
             </List.Item>
             <List.Item>
-              <Dialog.Root>
-                <Dialog.Trigger>
+              <Dialog.Root open={open}>
+                <Dialog.Trigger onClick={() => setOpen(true)}>
                   <Button
                     variant={"ghost"}
                     _hover={{ backgroundColor: "black" }}
@@ -53,7 +59,10 @@ const Navbar = () => {
                     <Dialog.Header>
                       <Dialog.Title>Add New FlashCard</Dialog.Title>
                     </Dialog.Header>
-                    <Dialog.Body></Dialog.Body>
+                    <Dialog.Body>
+                      {" "}
+                      <AddCardForm onSubmitForm={onSubmitForm} />{" "}
+                    </Dialog.Body>
                   </Dialog.Content>
                 </Dialog.Positioner>
               </Dialog.Root>

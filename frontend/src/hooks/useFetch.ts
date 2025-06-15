@@ -1,8 +1,10 @@
-import { axiosWrapper } from "@/config/axiosWrapper";
 import { useEffect, useState } from "react";
 
-export const useFetch = (url: string, ...dependecies) => {
-  const [data, setData] = useState([]);
+export const useFetch = <T>(
+  func: any,
+  ...dependecies: readonly unknown[]
+) => {
+  const [data, setData] = useState<T | []>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -11,12 +13,13 @@ export const useFetch = (url: string, ...dependecies) => {
     const fetchData = async () => {
       try {
         setLoading(true);
-        const response = await axiosWrapper.get(url);
+        const response = await func();
 
-        setData(response.data.data);
+        setData(response.data.data as T);
         setError(false);
         setErrorMessage("");
       } catch (error) {
+        console.log(error);
         setError(true);
         setErrorMessage("Something went wrong.");
       } finally {
@@ -25,7 +28,7 @@ export const useFetch = (url: string, ...dependecies) => {
     };
 
     fetchData();
-  }, [...dependecies]);
+  }, [url, ...dependecies]);
 
   return {
     data,
